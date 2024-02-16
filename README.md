@@ -23,7 +23,7 @@
 
   
 ### HR
--Administrer medarbejdere
+- Administrer medarbejdere
 
 
 ### Direktør
