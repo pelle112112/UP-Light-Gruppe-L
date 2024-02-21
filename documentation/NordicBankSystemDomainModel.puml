@@ -1,0 +1,63 @@
+@startuml
+
+Object Employee{
+Personal info
+Role
+}
+
+Object Customer{
+Personal info
+Credit Score
+}
+
+Object Account{
+Balance
+Type
+}
+
+Object Stock{
+Ticker
+Name
+Price
+Price development
+}
+
+Object Loan{
+Amount
+Interest
+Payment
+Duration
+}
+
+Object Insurance{
+Subject
+Monthly payment
+Payout sum
+}
+
+Object Transaction{
+Amount
+Receiver
+Payer
+Type
+}
+
+Object Fee{
+Amount
+Type
+}
+
+Customer "1...*"<-up-> "1...*" Account
+Customer "1"<-down-> "1...*" Insurance
+Account "1"<-left->"*" Transaction
+Loan "0...*"<-right-> "1...*" Customer
+Loan "1" <-left-> "*" Transaction
+Stock "1...*"<-down-> "1" Transaction
+Stock "0...*"<-right-> "1"Account
+Employee "1...*"<-left-> "1...*" Customer
+Transaction "1"<-up-> "0...*" Fee
+
+
+
+
+@enduml
