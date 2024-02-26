@@ -1,0 +1,34 @@
+@startuml
+
+Abstract Class Account{
+- int id
+- double balance
+- AcountType type
+- List <Transaction> transactions
+- Map <int,Customer> customers
+- Map <int, PaymentAgreement> paymentAgreements
+
++ Account (type, map<int,customer>customers)
++ addPaymentAgreement (paymentAgreement)
++ addTransaction (transaction)
++ removePaymentAgreement (paymentAgreement)
+}
+
+Class StockAccount extends Account{
+
+}
+
+Class SavingsAccount extends Account{
+- double interestRate
+}
+
+Class CheckingAccount extends Account{
+- double interestRate
+- Map <creditCardNumber, CreditCard creditCard> creditCards
+
+}
+
+
+
+
+@enduml
