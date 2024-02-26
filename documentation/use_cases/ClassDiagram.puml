@@ -1,34 +1,248 @@
 @startuml
 
+Employee "1..*" *-- "1..*" Customer
+
+Customer "1..*" *-- "1..*" Account
+Customer "1..*" *-- "1..*" Loan
+Customer "1" *-- "1..*" Insurance
+
+Account "1" *-- "*" Transaction
+Account "1" *-- "0..*" PaymentAgreement
+CheckingAccount "1" *-- "0..*" CreditCard
+StockAccount "1" *-- "0..*" Stock
+
+
+Transaction "1" *-- "0..*" Fee
+Transaction -- CreditCard
+Transaction -- Loan
+Transaction -- Stock
+
+Account "*" *-- "1" AccountType
+Transaction "*" *-- "1" TransactionType
+Fee "*" *-- "1" FeeType
+Employee "*" *-- "1" EmployeeRole
+Insurance "*" *-- "1" InsuranceSubject
+
 Abstract Class Account{
 - int id
 - double balance
-- AcountType type
-- List <Transaction> transactions
-- Map <int,Customer> customers
-- Map <int, PaymentAgreement> paymentAgreements
+- AccountType type
+- List<Transaction> transactions
+- Map<int,Customer> customers
+- Map<int, PaymentAgreement> paymentAgreements
 
-+ Account (type, map<int,customer>customers)
-+ addPaymentAgreement (paymentAgreement)
-+ addTransaction (transaction)
-+ removePaymentAgreement (paymentAgreement)
++ Account(map<int,customer>customers)
++ boolean addPaymentAgreement (paymentAgreement)
++ boolean addTransaction (transaction)
++ boolean removePaymentAgreement (paymentAgreement)
 }
 
 Class StockAccount extends Account{
+- double stockValueSum
+- Map<int, Stock> stocks
 
++ StockAccount(map<int,customer>customers)
++ boolean buyStocks(Set<Stock> stock)
++ boolean sellStocks(Set<Stock> stock)
 }
 
 Class SavingsAccount extends Account{
 - double interestRate
+
++ SavingsAccount(map<int,customer>customers)
++ addInterest()
 }
 
 Class CheckingAccount extends Account{
 - double interestRate
 - Map <creditCardNumber, CreditCard creditCard> creditCards
 
++ CheckingAccount(map<int,customer>customers)
++ addInterest()
 }
 
+Enum AccountType{
+SavingsAccount
+StockAccount
+CheckingAccount
+}
 
+Class CreditCard{
+- int creditCardNumber
+- Date expirationDate
+- int securityNumber
+
++ CreditCard(int creditCardNumber, int securityNumber)
++ boolean makePayment()
+}
+
+Abstract Class Fee{
+- int id
+- double amount
+- FeeType type
+
++ Fee(double amount, FeeType type)
++ abstract boolean payFee()
+}
+
+Class CommissionFee extends Fee{
++ CommissionFee(double amount)
++ boolean payFee()
+}
+
+Class TransactionFee extends Fee{
++ TransactionFee(double amount)
++ boolean payFee()
+}
+
+Class InsuranceFee extends Fee{
++ InsuranceFee(double amount)
++ boolean payFee()
+}
+
+Class ExchangeFee extends Fee{
++ ExchangeFee(double amount)
++ boolean payFee()
+}
+
+Class CardFee extends Fee{
++ CardFee(double amount)
++ boolean payFee()
+}
+
+Class ServiceFee extends Fee{
++ ServiceFee(double amount)
++ boolean payFee()
+}
+
+Enum FeeType{
+CommissionFee
+TransactionFee
+InsuranceFee
+ExchangeFee
+CardFee
+ServiceFee
+}
+
+Class Customer{
+- int id
+- String name
+- int age
+- String email
+- CreditScore creditScore
+- Map<int, Account> accounts
+- Map<int, Insurance> insurances
+- Map<int, Loan> loans
+
++ Customer(String name, int age, String email)
++ CreditScore calculateCreditScore()
++ addAccount(Account account)
++ removeAccount(Account account)
++ addInsurance(Insurance insurance)
++ removeInsurance(Insurance insurance)
++ addLoan(Loan loan)
++ removeLoan(Loan loan)
+}
+
+Abstract Class Employee{
+- int id
+- String name
+- Date hiringDate
+- Date seniority
+- double salary
+- Map<int, Customer> customers
+- EmployeeRole role
+}
+
+Class StockAdvisor extends Employee{
++ Stock suggestStocks()
+}
+
+Class BankingAdvisor extends Employee{
++ Loan CreateLoan(double amount, int customerID, double interestRate, double monthlyPayment)
+}
+
+Class InsuranceManager extends Employee{
+
+}
+
+Class DeskManager extends Employee{
+
+}
+
+Enum EmployeeRole{
+StockAdvisor
+BankingAdvisor
+InsuranceManager
+DeskManager
+}
+
+Class Transaction{
+- int id
+- double amount
+- int receivingAccount
+- int payingAccount
+- TransactionType type
+- Map<int, Fee> fees
+
++ Transaction(double amount, int receivingAccount, int payingAccount, TransactionType type, Map<int, Fee> fees)
+}
+
+Enum TransactionType{
+InternalTransfer
+ExternalTransfer
+StockAcquisition
+StockSale
+CardPayment
+OnlinePayment
+}
+
+Class Loan{
+- int id
+- double amount
+- double interestRate
+- double monthlyPayment
+- int monthsRemaining
+
++ Loan(double amount, int customerID, double interestRate, double monthlyPayment)
++ boolean makePayment()
++ boolean addInterest()
+}
+
+Class Insurance{
+- int id
+- InsuranceSubject subject
+- double monthlyPayment
+- double payoutSum
+}
+
+Enum InsuranceSubject {
+LifeInsurance
+ContentsInsurance
+AccidentInsurance
+TravelInsurance
+VehicleInsurance
+PetInsurance
+}
+
+Class Stock{
+- int id
+- String ticker
+- String name
+- double price
+- double priceDevelopment
+
++ Stock(int id, String ticker, String name, double price, double priceDevelopment)
+}
+
+Class PaymentAgreement{
+- int id
+- int payingAccountID
+- int receivingAccountID
+- double amount
+
++ boolean makePayment()
+}
 
 
 @enduml
